@@ -6,14 +6,25 @@ import { StyleSheet, Text, SafeAreaView, Button, View, Alert, TextInput, Activit
 export default App = () => {
   const [isLoading, setLoading] = useState(true);
   const [data, setData] = useState([]);
-
+  rrr = "t5";
   const getMovies = async () => {
     try {
-      const response = await fetch('https://api.met.no/weatherapi/locationforecast/2.0/compact?lat=51.5&lon=0', {
-        userAgent: 'MyTestApp'
-      });
+      const response = await fetch('https://api.met.no/weatherapi/locationforecast/2.0/compact?lat=51.5&lon=0',
+        //const response = await fetch('https://reactnative.dev/movies.json',
+        {
+          method: 'GET',
+          headers: {
+            'Accept': '*/*',
+            'User-Agent': 'MyTestApp/0.2'
+          }
+        }
+      );
       const json = await response.json();
-      setData(json.forecst);
+      setData(json.properties.timeseries);
+      //console.log(JSON.stringify(json.properties.timeseries));
+      //rrr = response;
+      //setData(response);
+
     } catch (error) {
       console.error(error);
     } finally {
@@ -155,20 +166,22 @@ export default App = () => {
         </View>
         <View style={styles.column}>
           <Text style={styles.title}>
-            -0
+            -10
           </Text>
         </View>
       </View>
 
       <View style={{ padding: 24 }}>
         {isLoading ? <ActivityIndicator /> : (
+
           <FlatList
             data={data}
-            keyExtractor={({ id }, index) => id}
+            keyExtractor={({ time }, index) => time}
             renderItem={({ item }) => (
-              <Text>{item.title}, {item.releaseYear}</Text>
+              <Text>{item.data.instant.details.air_temperature}</Text>
             )}
           />
+
         )}
       </View>
     </SafeAreaView>
