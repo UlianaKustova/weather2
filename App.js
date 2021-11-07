@@ -6,7 +6,8 @@ import { StyleSheet, Text, SafeAreaView, Button, View, Alert, TextInput, Activit
 export default App = () => {
   const [isLoading, setLoading] = useState(true);
   const [data, setData] = useState([]);
-  rrr = "t5";
+  const [forecast1, setForecast1] = useState('..');
+
   const getMovies = async () => {
     try {
       const response = await fetch('https://api.met.no/weatherapi/locationforecast/2.0/compact?lat=51.5&lon=0',
@@ -21,7 +22,11 @@ export default App = () => {
       );
       const json = await response.json();
       setData(json.properties.timeseries);
-      //console.log(JSON.stringify(json.properties.timeseries));
+      //console.log(json.properties.timeseries.time[3 - 1].data.instant.details.air_temperature);
+      ddd = JSON.stringify(json.properties.timeseries[5].data.instant.details.air_temperature);
+      console.log(ddd);
+      setForecast1(ddd);
+      //console.log(JSON.search(json.properties.timeseries, '//data'));
       //rrr = response;
       //setData(response);
 
@@ -86,10 +91,11 @@ export default App = () => {
           </Text>
         </View>
         <View style={styles.column}>
-          <Text style={styles.title}>
-            4
-          </Text>
+          {isLoading ? <Text style={styles.title}>..</Text> : (
+            <Text style={styles.title}>{forecast1}</Text>
+          )}
         </View>
+
         <View style={styles.column}>
           <Text style={styles.title}>
             -2
@@ -184,7 +190,7 @@ export default App = () => {
 
         )}
       </View>
-    </SafeAreaView>
+    </SafeAreaView >
   );
 }
 //стили
