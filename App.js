@@ -10,7 +10,7 @@ export default App = () => {
 
   const getMovies = async () => {
     try {
-      const response = await fetch('https://api.met.no/weatherapi/locationforecast/2.0/compact?lat=51.5&lon=0',
+      const response = await fetch('https://api.met.no/weatherapi/locationforecast/2.0/compact?lat=56.1943&lon=44.0007',
         //const response = await fetch('https://reactnative.dev/movies.json',
         {
           method: 'GET',
