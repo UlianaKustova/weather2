@@ -51,8 +51,8 @@ export default App = () => {
         //todo сообщить об ошибке
       }
 
-      //const response2 = await fetch('http://dataservice.accuweather.com/forecasts/v1/daily/5day/294199?apikey=6L1XZVx53Vr591ZyuqZveNAGStoRgghs&metric=true',
-      const response2 = await fetch('https://api.weatherbit.io/v2.0/forecast/hourly?&lat=56.1943&lon=44.0007&key=fdf87b48498b44c1b432755e8dd1747c&hours=48',
+      response2 = await fetch('http://dataservice.accuweather.com/forecasts/v1/daily/5day/294199?apikey=6L1XZVx53Vr591ZyuqZveNAGStoRgghs&metric=true',
+        // const response2 = await fetch('https://api.weatherbit.io/v2.0/forecast/hourly?&lat=56.1943&lon=44.0007&key=fdf87b48498b44c1b432755e8dd1747c&hours=48',
 
         {
           method: 'GET',
@@ -63,16 +63,16 @@ export default App = () => {
         }
       );
       if (response2.ok) {
-        const json2 = await response2.json();
+        json2 = await response2.json();
 
 
-        // setForecastAW1(JSON.stringify(json2.DailyForecasts[0].Temperature.Minimum.Value));//три строчки ищут значения
-        // setForecastAW2(JSON.stringify(json2.DailyForecasts[1].Temperature.Minimum.Value));
-        // setForecastAW3(JSON.stringify(json2.DailyForecasts[2].Temperature.Minimum.Value));
+        setForecastAW1(JSON.stringify(json2.DailyForecasts[0].Temperature.Minimum.Value));//три строчки ищут значения
+        setForecastAW2(JSON.stringify(json2.DailyForecasts[1].Temperature.Minimum.Value));
+        setForecastAW3(JSON.stringify(json2.DailyForecasts[2].Temperature.Minimum.Value));
 
-        setForecastAW1(JSON.stringify(json2.data[6].temp));//три строчки ищут значения
-        setForecastAW2(JSON.stringify(json2.data[24].temp));
-        setForecastAW3(JSON.stringify(json2.data[47].temp));
+        // setForecastAW1(JSON.stringify(json2.data[6].temp));//три строчки ищут значения
+        // setForecastAW2(JSON.stringify(json2.data[24].temp));
+        // setForecastAW3(JSON.stringify(json2.data[47].temp));
 
       } else {
         //todo сообщить об ошибке
@@ -92,20 +92,9 @@ export default App = () => {
         json3 = await response3.json();
 
 
-        //console.log(json.properties.timeseries.time[3 - 1].data.instant.details.air_temperature);
-        //ddd2 = JSON.stringify(json2.properties.timeseries[5].data.instant.details.air_temperature);
-        //console.log(JSON.stringify(json2));
-
-        //setForecastAW1(JSON.stringify(json.DailyForecasts[1].Temperature.Minimum.Value));
         setForecastOW1(JSON.stringify(json3.hourly[6].temp));//три строчки ищут значения
         setForecastOW2(JSON.stringify(json3.hourly[24].temp));
         setForecastOW3(JSON.stringify(json3.hourly[47].temp));
-        //setForecast2(JSON.stringify(json.properties.timeseries[24].data.instant.details.air_temperature));
-        //setForecast3(JSON.stringify(json.properties.timeseries[48].data.instant.details.air_temperature));
-
-        //console.log(JSON.search(json.properties.timeseries, '//data'));
-        //rrr = response;
-        //setData(response);  
       } else {
         //todo сообщить об ошибке
       }
@@ -150,17 +139,17 @@ export default App = () => {
         </View>
         <View style={styles.column}>
           <Text style={styles.title}>
-            After 6
+            After 6h
           </Text>
         </View>
         <View style={styles.column}>
           <Text style={styles.title}>
-            After 24
+            After 24h
           </Text>
         </View>
         <View style={styles.column}>
           <Text style={styles.title}>
-            After 48
+            After 48h
           </Text>
         </View>
       </View>
