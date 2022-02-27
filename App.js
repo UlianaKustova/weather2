@@ -1,7 +1,8 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, SafeAreaView, Button, View, Alert, TextInput, ActivityIndicator, FlatList } from 'react-native';
+import { StyleSheet, Text, SafeAreaView, Button, View, Alert, TextInput, ActivityIndicator, FlatList, ImageBackground } from 'react-native';
 
+const image = require('./backgr.png');
 
 export default App = () => {
   const [isLoading, setLoading] = useState(true);
@@ -113,154 +114,136 @@ export default App = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.titleView}>
-        <Text style={styles.title}>
-          Enter your city
-        </Text>
-      </View>
+      <ImageBackground source={image} resizeMode="cover" style={styles.image}>
 
-      <View style={styles.search}>
-        <View style={styles.input}>
-          <TextInput />
-        </View>
-        <View style={styles.btnSrch}>
-          <Button
-            title=" "
-            onPress={() => { Alert.alert('Not supported'); getForecast() }}
-          />
-        </View>
-      </View>
-
-      <View style={styles.line0}>
-        <View style={styles.column}>
-          <Text style={styles.title}>
-
+        <View style={styles.titleView}>
+          <Text style={styles.zagolovok}>
+            Weather Forecaster
           </Text>
-        </View>
-        <View style={styles.column}>
-          <Text style={styles.title}>
-            After 6h
-          </Text>
-        </View>
-        <View style={styles.column}>
-          <Text style={styles.title}>
-            After 24h
-          </Text>
-        </View>
-        <View style={styles.column}>
-          <Text style={styles.title}>
-            After 48h
-          </Text>
-        </View>
-      </View>
-
-      <View style={styles.line}>
-        <View style={styles.column}>
-          <Text style={styles.title}>
-            YR
-          </Text>
-        </View>
-        <View style={styles.column}>
-          {isLoading ? <Text style={styles.title}>...</Text> : (
-            <Text style={styles.title}>{forecast1}</Text>
-          )}
         </View>
 
-        <View style={styles.column}>
-          {isLoading ? <Text style={styles.title}>...</Text> : (
-            <Text style={styles.title}>{forecast2}</Text>
-          )}
+        <View style={styles.titleView}>
+          <Text style={styles.titletop}>
+            Enter your city
+          </Text>
         </View>
-        <View style={styles.column}>
-          {isLoading ? <Text style={styles.title}>...</Text> : (
-            <Text style={styles.title}>{forecast3}</Text>
-          )}
-        </View>
-      </View>
 
-      <View style={styles.line}>
-        <View style={styles.column}>
-          <Text style={styles.title}>
-            AccuWeather
+        <View style={styles.search}>
+          <View style={styles.input}>
+            <TextInput />
+          </View>
+          <View style={styles.btnSrch}>
+            <Button
+              title="Search"
+              color="rgb(12, 99, 53)"
+              onPress={() => { Alert.alert('Not supported'); getForecast() }}
+            />
+          </View>
+        </View>
+        <View style={styles.titleView2}>
+          <Text style={styles.titletop}>
+            Location: Nizhny Novgorod
           </Text>
         </View>
-        <View style={styles.column}>
-          {isLoading ? <Text style={styles.title}>...</Text> : (
-            <Text style={styles.title}>{forecastAW1}</Text>
-          )}
-        </View>
-        <View style={styles.column}>
-          {isLoading ? <Text style={styles.title}>...</Text> : (
-            <Text style={styles.title}>{forecastAW2}</Text>
-          )}
-        </View>
-        <View style={styles.column}>
-          {isLoading ? <Text style={styles.title}>...</Text> : (
-            <Text style={styles.title}>{forecastAW3}</Text>
-          )}
-        </View>
-      </View>
 
-      <View style={styles.line}>
-        <View style={styles.column}>
-          <Text style={styles.title}>
-            OpenWeatherMap
-          </Text>
+        <View style={styles.line0}>
+          <View style={styles.column}>
+            <Text style={styles.title}>
+              Source
+            </Text>
+          </View>
+          <View style={styles.column}>
+            <Text style={styles.title}>
+              After 6h
+            </Text>
+          </View>
+          <View style={styles.column}>
+            <Text style={styles.title}>
+              After 24h
+            </Text>
+          </View>
+          <View style={styles.column}>
+            <Text style={styles.title}>
+              After 48h
+            </Text>
+          </View>
         </View>
-        <View style={styles.column}>
-          {isLoading ? <Text style={styles.title}>...</Text> : (
-            <Text style={styles.title}>{forecastOW1}</Text>
-          )}
-        </View>
-        <View style={styles.column}>
-          {isLoading ? <Text style={styles.title}>...</Text> : (
-            <Text style={styles.title}>{forecastOW2}</Text>
-          )}
-        </View>
-        <View style={styles.column}>
-          {isLoading ? <Text style={styles.title}>...</Text> : (
-            <Text style={styles.title}>{forecastOW3}</Text>
-          )}
-        </View>
-      </View>
 
-      {/* <View style={styles.line}>
-        <View style={styles.column}>
-          <Text style={styles.title}>
-            Calculator
-          </Text>
-        </View>
-        <View style={styles.column}>
-          <Text style={styles.title}>
-            19
-          </Text>
-        </View>
-        <View style={styles.column}>
-          <Text style={styles.title}>
-            -5
-          </Text>
-        </View>
-        <View style={styles.column}>
-          <Text style={styles.title}>
-            -11
-          </Text>
-        </View>
-      </View> */}
-
-      {/* <View style={{ padding: 24 }}>
-        {isLoading ? <ActivityIndicator /> : (
-
-          <FlatList
-            data={data}
-            keyExtractor={({ time }, index) => time}
-            renderItem={({ item }) => (
-              <Text>{item.data.instant.details.air_temperature}</Text>
+        <View style={styles.line}>
+          <View style={styles.column}>
+            <Text style={styles.title}>
+              YR.NO
+            </Text>
+          </View>
+          <View style={styles.column}>
+            {isLoading ? <Text style={styles.title}>...</Text> : (
+              <Text style={styles.title}>{forecast1} °C</Text>
             )}
-          />
+          </View>
 
-        )}
-      </View> */}
+          <View style={styles.column}>
+            {isLoading ? <Text style={styles.title}>...</Text> : (
+              <Text style={styles.title}>{forecast2} °C</Text>
+            )}
+          </View>
+          <View style={styles.column}>
+            {isLoading ? <Text style={styles.title}>...</Text> : (
+              <Text style={styles.title}>{forecast3} °C</Text>
+            )}
+          </View>
+        </View>
 
+        <View style={styles.line}>
+          <View style={styles.column}>
+            <Text style={styles.title}>
+              AccuWeather
+            </Text>
+          </View>
+          <View style={styles.column}>
+            {isLoading ? <Text style={styles.title}>...</Text> : (
+              <Text style={styles.title}>{forecastAW1} °C</Text>
+            )}
+          </View>
+          <View style={styles.column}>
+            {isLoading ? <Text style={styles.title}>...</Text> : (
+              <Text style={styles.title}>{forecastAW2} °C</Text>
+            )}
+          </View>
+          <View style={styles.column}>
+            {isLoading ? <Text style={styles.title}>...</Text> : (
+              <Text style={styles.title}>{forecastAW3} °C</Text>
+            )}
+          </View>
+        </View>
+
+        <View style={styles.line}>
+          <View style={styles.column}>
+            <Text style={styles.title}>
+              OpenWeatherMap
+            </Text>
+          </View>
+          <View style={styles.column}>
+            {isLoading ? <Text style={styles.title}>...</Text> : (
+              <Text style={styles.title}>{forecastOW1} °C</Text>
+            )}
+          </View>
+          <View style={styles.column}>
+            {isLoading ? <Text style={styles.title}>...</Text> : (
+              <Text style={styles.title}>{forecastOW2} °C</Text>
+            )}
+          </View>
+          <View style={styles.column}>
+            {isLoading ? <Text style={styles.title}>...</Text> : (
+              <Text style={styles.title}>{forecastOW3} °C</Text>
+            )}
+          </View>
+        </View>
+        <View style={styles.extend}>
+          <Text style={styles.title}>
+
+          </Text>
+        </View>
+      </ImageBackground>
     </SafeAreaView >
   );
 }
@@ -272,6 +255,11 @@ const styles = StyleSheet.create({
   },
   title: {
     textAlign: 'center',//текст по середине
+    fontWeight: 'bold',
+  },
+  titletop: {
+    textAlign: 'left',
+    fontWeight: 'bold',
   },
   titleView: {
     marginVertical: '2%', /* отступ сверху и снизу */
@@ -281,14 +269,14 @@ const styles = StyleSheet.create({
   },
   input: {
     borderWidth: 1,//толщина рамки
-    flex: 10,
+    flex: 3,
   },
   search: {
     flexDirection: "row",//вью распологаются друг за дружкой по горизонтали
   },
   line: {
     flexDirection: "row",
-    marginTop: 10,
+    marginTop: 20,
   },
   column: {
     flex: 1,
@@ -296,5 +284,25 @@ const styles = StyleSheet.create({
   line0: {
     flexDirection: "row",
     marginTop: 40,
+    //marginVertical: '30%',
+
+  },
+  zagolovok: {
+    textAlign: 'center',
+    color: 'rgb(113, 245, 174)',
+    fontWeight: 'bold',
+    fontSize: 30,
+    marginTop: 50,
+  },
+  image: {
+    justifyContent: "center"
+  },
+  extend: {
+    flexDirection: "row",
+    marginVertical: '70%',
+  },
+  titleView2: {
+    marginTop: 100,
+
   },
 });
