@@ -16,13 +16,25 @@ export default App = () => {
   const [forecastOW1, setForecastOW1] = useState('..');
   const [forecastOW2, setForecastOW2] = useState('..');
   const [forecastOW3, setForecastOW3] = useState('..');
+  const [searchText, setSearchText] = useState('');
+  const [locationText, setlocationText] = useState('');
+  const [lat, setlat] = useState('');
+  const [lon, setlon] = useState('');
 
 
-
-  const getForecast = async () => {
+  const getLocation = async () => {
     try {
+      if (searchText.length == 0) {
+        setlocationText(' ');
+        setlat("56.194");
+        setlon("44.0007");
+        return;
+      }
+      txt = "https://nominatim.openstreetmap.org/search?q=";
+      txt = txt + searchText + "&format=geocodejson";
+
       setLoading(true);//ставим статус тру для сетлоадинг
-      response = await fetch('https://api.met.no/weatherapi/locationforecast/2.0/compact?lat=56.1943&lon=44.0007',
+      response = await fetch(txt,
         //await говорит о том что данная функция будет выполнятся асинхронно и не будет блокоровать выполнение другого кода приложения
         //fetch функция получения данных по api
         {
@@ -33,6 +45,48 @@ export default App = () => {
           }
         }
       );
+      if (response.ok) { // если HTTP-статус в диапазоне 200-299
+
+        json = await response.json();//представляем ответ в виде json
+        //console.log(JSON.stringify(json));
+
+        ttt = JSON.stringify(json.features[0].properties.geocoding.name);
+        setlocationText(ttt + ', ' + JSON.stringify(json.features[0].properties.geocoding.label));
+        setlat(JSON.stringify(json.features[0].geometry.coordinates[1]));//вызываем функцию и передаем разпаршенное значение фунуции
+        setlon(JSON.stringify(json.features[0].geometry.coordinates[0]));
+
+
+        //console.log(lat);
+        //console.log(lon);
+      } else {
+        //todo сообщить об ошибке
+      }
+    } catch (error) {
+      console.error(error);// в консоль приложения выводим свединья об ошибке
+      //todo сделать вывод информации пользователю Что то пошло не так
+    } finally {//этот код выполнится всегда вне зависимости от того были ошибки в основном коде функции или нет
+      setLoading(false);
+    }
+  }
+
+
+
+  const getForecast = async () => {
+    try {
+      setLoading(true);//ставим статус тру для сетлоадинг
+      txt = "https://api.met.no/weatherapi/locationforecast/2.0/compact?lat=" + lat + "&lon=" + lon;
+      response = await fetch(txt,
+        //await говорит о том что данная функция будет выполнятся асинхронно и не будет блокоровать выполнение другого кода приложения
+        //fetch функция получения данных по api
+        {
+          method: 'GET',
+          headers: {
+            'Accept': '*/*',
+            'User-Agent': 'MyTestApp/0.2'
+          }
+        }
+      );
+
       if (response.ok) { // если HTTP-статус в диапазоне 200-299
 
         json = await response.json();//представляем ответ в виде json
@@ -78,8 +132,8 @@ export default App = () => {
       } else {
         //todo сообщить об ошибке
       }
-
-      response3 = await fetch('http://api.openweathermap.org/data/2.5/onecall?lat=56.1943&lon=44.0007&units=metric&APPID=06eac4143280690e81a70a7ab328e288',
+      txt = "http://api.openweathermap.org/data/2.5/onecall?lat=" + lat + "&lon=" + lon + "&units=metric&APPID=06eac4143280690e81a70a7ab328e288";
+      response3 = await fetch(txt,
 
         {
           method: 'GET',
@@ -91,6 +145,7 @@ export default App = () => {
       );
       if (response3.ok) {
         json3 = await response3.json();
+        console.log(JSON.stringify(json3.hourly[6].temp));
 
 
         setForecastOW1(JSON.stringify(json3.hourly[6].temp));//три строчки ищут значения
@@ -109,6 +164,8 @@ export default App = () => {
   }
 
   useEffect(() => {//говорим react что этот код нужно выполнить после рендера
+    setlat("56.194");
+    setlon("44.0007");
     getForecast();//основная функция получения данных
   }, []);
 
@@ -130,19 +187,22 @@ export default App = () => {
 
         <View style={styles.search}>
           <View style={styles.input}>
-            <TextInput />
+            <TextInput onChangeText={newText => setSearchText(newText)} />
           </View>
           <View style={styles.btnSrch}>
             <Button
               title="Search"
               color="rgb(12, 99, 53)"
-              onPress={() => { Alert.alert('Not supported'); getForecast() }}
+              onPress={() => { getLocation(); getForecast() }}
             />
           </View>
         </View>
         <View style={styles.titleView2}>
           <Text style={styles.titletop}>
-            Location: Nizhny Novgorod
+            Location:
+          </Text>
+          <Text style={styles.titletop}>
+            {locationText}
           </Text>
         </View>
 
