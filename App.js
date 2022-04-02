@@ -1,6 +1,6 @@
-import { StatusBar } from 'expo-status-bar';
+//import { StatusBar } from 'expo-status-bar';
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, SafeAreaView, Button, View, Alert, TextInput, ActivityIndicator, FlatList, ImageBackground } from 'react-native';
+import { StyleSheet, Text, SafeAreaView, Button, View, TextInput, ImageBackground } from 'react-native';
 
 const image = require('./backgr.png');
 
@@ -18,22 +18,23 @@ export default App = () => {
   const [forecastOW3, setForecastOW3] = useState('..');
   const [searchText, setSearchText] = useState('');
   const [locationText, setlocationText] = useState('');
-  const [lat, setlat] = useState('');
-  const [lon, setlon] = useState('');
-
+  const [lat, setlat] = useState();
+  const [lon, setlon] = useState();
+  const [locid, setlocid] = useState(0);
 
   const getLocation = async () => {
     try {
       if (searchText.length == 0) {
-        setlocationText(' ');
-        setlat("56.194");
-        setlon("44.0007");
+        setlocationText('Nizhny Novgorod');
+        setlat('56.194');
+        setlon('44.0007');
         return;
       }
+
+
+
       txt = "https://nominatim.openstreetmap.org/search?q=";
       txt = txt + searchText + "&format=geocodejson";
-
-      setLoading(true);//ставим статус тру для сетлоадинг
       response = await fetch(txt,
         //await говорит о том что данная функция будет выполнятся асинхронно и не будет блокоровать выполнение другого кода приложения
         //fetch функция получения данных по api
@@ -46,7 +47,6 @@ export default App = () => {
         }
       );
       if (response.ok) { // если HTTP-статус в диапазоне 200-299
-
         json = await response.json();//представляем ответ в виде json
         //console.log(JSON.stringify(json));
 
@@ -55,17 +55,45 @@ export default App = () => {
         setlat(JSON.stringify(json.features[0].geometry.coordinates[1]));//вызываем функцию и передаем разпаршенное значение фунуции
         setlon(JSON.stringify(json.features[0].geometry.coordinates[0]));
 
-
-        //console.log(lat);
-        //console.log(lon);
       } else {
         //todo сообщить об ошибке
       }
+
+      txt = "http://dataservice.accuweather.com/locations/v1/cities/autocomplete?apikey=6L1XZVx53Vr591ZyuqZveNAGStoRgghs&q=" + searchText;
+      response = await fetch(txt,
+        //await говорит о том что данная функция будет выполнятся асинхронно и не будет блокоровать выполнение другого кода приложения
+        //fetch функция получения данных по api
+        {
+          method: 'GET',
+          headers: {
+            'Accept': '*/*',
+            'User-Agent': 'MyTestApp/0.2'
+          }
+        }
+      );
+      if (response.ok) { // если HTTP-статус в диапазоне 200-299
+        json = await response.json();//представляем ответ в виде json
+        textt = JSON.stringify(json);
+        console.log(textt.slice(21, 27));
+
+
+        // ttt = JSON.stringify(json.features[0].properties.geocoding.name);
+        //setlocationText(ttt + ', ' + JSON.stringify(json.features[0].properties.geocoding.label));
+        //setlat(JSON.stringify(json.features[0].geometry.coordinates[1]));//вызываем функцию и передаем разпаршенное значение фунуции
+        setlocid(textt.slice(21, 27));
+        //setlocid('328328');
+
+      } else {
+        //todo сообщить об ошибке
+      }
+
+
     } catch (error) {
-      console.error(error);// в консоль приложения выводим свединья об ошибке
+      console.log(error);// в консоль приложения выводим свединья об ошибке
       //todo сделать вывод информации пользователю Что то пошло не так
+
     } finally {//этот код выполнится всегда вне зависимости от того были ошибки в основном коде функции или нет
-      setLoading(false);
+      if (locid.length == 0) setlocid(0);
     }
   }
 
@@ -88,27 +116,19 @@ export default App = () => {
       );
 
       if (response.ok) { // если HTTP-статус в диапазоне 200-299
-
         json = await response.json();//представляем ответ в виде json
-        //console.log(JSON.stringify(json));
-        //setData(json.properties.timeseries);//вызываем сеттер для переменной data
-        //console.log(json.properties.timeseries.time[3 - 1].data.instant.details.air_temperature);
-        //ddd = JSON.stringify(json.properties.timeseries[5].data.instant.details.air_temperature);
-        //console.log(ddd);
         ttt = JSON.stringify(json.properties.timeseries[6].data.instant.details.air_temperature);
         setForecast1(ttt);
         setForecast2(JSON.stringify(json.properties.timeseries[24].data.instant.details.air_temperature));//вызываем функцию и передаем разпаршенное значение фунуции
         setForecast3(JSON.stringify(json.properties.timeseries[48].data.instant.details.air_temperature));
-        //console.log(JSON.search(json.properties.timeseries, '//data'));
-        //rrr = response;
-        //setData(response);
       } else {
         //todo сообщить об ошибке
       }
 
-      response2 = await fetch('http://dataservice.accuweather.com/forecasts/v1/daily/5day/294199?apikey=6L1XZVx53Vr591ZyuqZveNAGStoRgghs&metric=true',
+      txt = "http://dataservice.accuweather.com/forecasts/v1/daily/5day/" + locid + "?apikey=6L1XZVx53Vr591ZyuqZveNAGStoRgghs&metric=true";
+      response2 = await fetch(txt,
+        // response2 = await fetch('http://dataservice.accuweather.com/forecasts/v1/daily/5day/294199?apikey=6L1XZVx53Vr591ZyuqZveNAGStoRgghs&metric=true',
         // const response2 = await fetch('https://api.weatherbit.io/v2.0/forecast/hourly?&lat=56.1943&lon=44.0007&key=fdf87b48498b44c1b432755e8dd1747c&hours=48',
-
         {
           method: 'GET',
           headers: {
@@ -119,8 +139,6 @@ export default App = () => {
       );
       if (response2.ok) {
         json2 = await response2.json();
-
-
         setForecastAW1(JSON.stringify(json2.DailyForecasts[0].Temperature.Minimum.Value));//три строчки ищут значения
         setForecastAW2(JSON.stringify(json2.DailyForecasts[1].Temperature.Minimum.Value));
         setForecastAW3(JSON.stringify(json2.DailyForecasts[2].Temperature.Minimum.Value));
@@ -131,6 +149,9 @@ export default App = () => {
 
       } else {
         //todo сообщить об ошибке
+        setForecastAW1('-');
+        setForecastAW2('-');
+        setForecastAW3('-');
       }
       txt = "http://api.openweathermap.org/data/2.5/onecall?lat=" + lat + "&lon=" + lon + "&units=metric&APPID=06eac4143280690e81a70a7ab328e288";
       response3 = await fetch(txt,
@@ -145,9 +166,6 @@ export default App = () => {
       );
       if (response3.ok) {
         json3 = await response3.json();
-        console.log(JSON.stringify(json3.hourly[6].temp));
-
-
         setForecastOW1(JSON.stringify(json3.hourly[6].temp));//три строчки ищут значения
         setForecastOW2(JSON.stringify(json3.hourly[24].temp));
         setForecastOW3(JSON.stringify(json3.hourly[47].temp));
@@ -163,11 +181,9 @@ export default App = () => {
     }
   }
 
-  useEffect(() => {//говорим react что этот код нужно выполнить после рендера
-    setlat("56.194");
-    setlon("44.0007");
+  useEffect(() => {//говорим react что этот код нужно выполнить после обновления перемнной
     getForecast();//основная функция получения данных
-  }, []);
+  }, [locid]);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -193,7 +209,7 @@ export default App = () => {
             <Button
               title="Search"
               color="rgb(12, 99, 53)"
-              onPress={() => { getLocation(); getForecast() }}
+              onPress={() => { getLocation() }}
             />
           </View>
         </View>
