@@ -20,14 +20,17 @@ export default App = () => {
   const [lat, setlat] = useState();
   const [lon, setlon] = useState();
   const [locid, setlocid] = useState(0);
+  const [locflag, setlocflag] = useState(false);
 
   const getLocation = async () => {
+    setlocflag(false);
     try {
       if (searchText.length == 0) {
         setlocationText('Nizhny Novgorod');
         setlat('56.194');
         setlon('44.0007');
         setlocid('294199');
+        setlocflag(true);
         return;
       }
 
@@ -95,8 +98,10 @@ export default App = () => {
       console.log(error);// в консоль приложения выводим свединья об ошибке
       //todo сделать вывод информации пользователю Что то пошло не так
       setlocationText('Not able to find location');
+      setlocflag(true);
     } finally {//этот код выполнится всегда вне зависимости от того были ошибки в основном коде функции или нет
       if (flag == false) setlocid(1);
+      setlocflag(true);
     }
   }
 
@@ -189,7 +194,7 @@ export default App = () => {
 
   useEffect(() => {//говорим react что этот код нужно выполнить после обновления перемнной
     getForecast();//основная функция получения данных
-  }, [locid]);
+  }, [locflag]);
 
   return (
     <SafeAreaView style={styles.container}>
