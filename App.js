@@ -85,6 +85,7 @@ export default App = () => {
 
       } else {
         //todo сообщить об ошибке
+        setlocid(0);
       }
 
 
@@ -137,8 +138,10 @@ export default App = () => {
           }
         }
       );
+      //console.log(await response2.json());
       if (response2.ok) {
         json2 = await response2.json();
+        //console.log(json2);
         setForecastAW1(JSON.stringify(json2.DailyForecasts[0].Temperature.Minimum.Value));//три строчки ищут значения
         setForecastAW2(JSON.stringify(json2.DailyForecasts[1].Temperature.Minimum.Value));
         setForecastAW3(JSON.stringify(json2.DailyForecasts[2].Temperature.Minimum.Value));
