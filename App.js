@@ -6,7 +6,6 @@ const image = require('./backgr.png');
 
 export default App = () => {
   const [isLoading, setLoading] = useState(true);
-  //const [data, setData] = useState([]);
   const [forecast1, setForecast1] = useState('..');//опред переменную и функцию устаноыки ее значения и присваиваем первоначальное значение
   const [forecast2, setForecast2] = useState('..');
   const [forecast3, setForecast3] = useState('..');
@@ -28,6 +27,7 @@ export default App = () => {
         setlocationText('Nizhny Novgorod');
         setlat('56.194');
         setlon('44.0007');
+        setlocid('294199');
         return;
       }
 
@@ -58,7 +58,7 @@ export default App = () => {
       } else {
         //todo сообщить об ошибке
       }
-
+      flag = false;
       txt = "http://dataservice.accuweather.com/locations/v1/cities/autocomplete?apikey=6L1XZVx53Vr591ZyuqZveNAGStoRgghs&q=" + searchText;
       response = await fetch(txt,
         //await говорит о том что данная функция будет выполнятся асинхронно и не будет блокоровать выполнение другого кода приложения
@@ -81,20 +81,22 @@ export default App = () => {
         //setlocationText(ttt + ', ' + JSON.stringify(json.features[0].properties.geocoding.label));
         //setlat(JSON.stringify(json.features[0].geometry.coordinates[1]));//вызываем функцию и передаем разпаршенное значение фунуции
         setlocid(textt.slice(21, 27));
+        flag = true;
         //setlocid('328328');
 
       } else {
         //todo сообщить об ошибке
-        setlocid(0);
+        setlocid(1);
+        flag = true;
       }
 
 
     } catch (error) {
       console.log(error);// в консоль приложения выводим свединья об ошибке
       //todo сделать вывод информации пользователю Что то пошло не так
-
+      setlocationText('Not able to find location');
     } finally {//этот код выполнится всегда вне зависимости от того были ошибки в основном коде функции или нет
-      if (locid.length == 0) setlocid(0);
+      if (flag == false) setlocid(1);
     }
   }
 
@@ -184,6 +186,7 @@ export default App = () => {
     }
   }
 
+
   useEffect(() => {//говорим react что этот код нужно выполнить после обновления перемнной
     getForecast();//основная функция получения данных
   }, [locid]);
@@ -212,7 +215,7 @@ export default App = () => {
             <Button
               title="Search"
               color="rgb(12, 99, 53)"
-              onPress={() => { getLocation() }}
+              onPress={() => { getLocation(); }}
             />
           </View>
         </View>
